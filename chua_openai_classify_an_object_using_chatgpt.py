@@ -11,8 +11,6 @@ Original file is located at
 **Coded by:** Frenchie E. Chua BSCS 3A
 """
 
-!pip install openai
-
 """##### Hide your open AI platform key in an environment variable"""
 
 # Commented out IPython magic to ensure Python compatibility.
