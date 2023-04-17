@@ -1,6 +1,13 @@
 import streamlit as st
 import openai
 import json
+import openai_secret_manager
+
+# Fetch the OpenAI API key from the Secrets Manager
+secrets = openai_secret_manager.get_secret("openai")
+
+# Retrieve the API key from the secrets dictionary
+api_key = secrets["api_key"]
 
 st.title("Object Classification using ChatGPT")
 
