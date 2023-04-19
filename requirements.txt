@@ -1,5 +1,8 @@
-pip==23.1
-openai
-streamlit
+
+openai==0.27.4
 json
 openai_secret_manager
+openai
+streamlit==1.21.0
+pip==23.1
+/home/appuser/venv/bin/python -m pip install --upgrade pip
