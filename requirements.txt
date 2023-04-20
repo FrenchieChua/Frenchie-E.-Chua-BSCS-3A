@@ -5,4 +5,4 @@ openai_secret_manager
 openai
 streamlit==1.21.0
 pip==23.1
-/home/appuser/venv/bin/python -m pip install --upgrade pip
+
