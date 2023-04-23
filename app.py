@@ -3,6 +3,9 @@ import openai
 import json
 import requests
 
+openai.api_key = "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"
+
+
 # Load categories from text file
 url_categories = 'https://raw.githubusercontent.com/FrenchieChuaFrenchie-E.-Chua-BSCS3A/Main/categories.txt'
 categories = requests.get(url_categories).text.splitlines()
