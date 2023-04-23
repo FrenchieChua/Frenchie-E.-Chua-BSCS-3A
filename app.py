@@ -3,7 +3,7 @@ import openai
 import json
 
 
-openai.api_key = "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"
+openai.api_key = "sk-w52LY1TFpVaW2pIGQEuhT3BlbkFJBoYgKimSONDi61x56nDmP"
 
 # Load categories from text file
 with open("categories.txt", "r") as f:
