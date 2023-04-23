@@ -3,7 +3,8 @@ import openai
 import json
 import os
 
-openai.api_key = os.environ.get("OPENAI_API_KEY")
+# Load secrets
+st.secrets["openai_api_key"] = st.secrets["openai"]["api_key"]
 
 # Load categories from text file
 with open("categories.txt", "r") as f:
