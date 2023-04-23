@@ -1,14 +1,13 @@
 import streamlit as st
 import openai
 import json
-import requests
+import urllib.request
 
 openai.api_key = "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"
 
-
 # Load categories from text file
 url_categories = 'https://raw.githubusercontent.com/FrenchieChuaFrenchie-E.-Chua-BSCS3A/Main/categories.txt'
-categories = requests.get(url_categories).text.splitlines()
+categories = urllib.request.urlopen(url_categories).read().decode('utf-8').splitlines()
 
 # Define function to classify an object using ChatGPT
 def classify_object(object_name):
@@ -42,7 +41,7 @@ def classify_objects(object_list):
 
 # Load objects from text file
 url_objects = 'https://raw.githubusercontent.com/FrenchieChuaFrenchie-E.-Chua-BSCS3A/Main/tobjects.txt'
-objects = requests.get(url_objects).text.splitlines()
+objects = urllib.request.urlopen(url_objects).read().decode('utf-8').splitlines()
 
 # Classify the objects
 classifications = classify_objects(objects)
