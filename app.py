@@ -1,19 +1,11 @@
 import streamlit as st
 import openai
 import json
-import openai_secret_manager
-
-# Fetch the OpenAI API key from the Secrets Manager
-secrets = openai_secret_manager.get_secret("openai")
-
-# Retrieve the API key from the secrets dictionary
-api_key = secrets["api_key"]
-
-st.title("Object Classification using ChatGPT")
+import requests
 
 # Load categories from text file
-with open("categories.txt", "r") as f:
-    categories = [line.strip() for line in f.readlines()]
+url_categories = 'https://raw.githubusercontent.com/FrenchieChuaFrenchie-E.-Chua-BSCS3A/Main/categories.txt'
+categories = requests.get(url_categories).text.splitlines()
 
 # Define function to classify an object using ChatGPT
 def classify_object(object_name):
@@ -46,8 +38,8 @@ def classify_objects(object_list):
     return classifications
 
 # Load objects from text file
-with open("objects.txt", "r") as f:
-    objects = [line.strip() for line in f.readlines()]
+url_objects = 'https://raw.githubusercontent.com/FrenchieChuaFrenchie-E.-Chua-BSCS3A/Main/tobjects.txt'
+objects = requests.get(url_objects).text.splitlines()
 
 # Classify the objects
 classifications = classify_objects(objects)
