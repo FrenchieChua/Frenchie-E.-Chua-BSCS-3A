@@ -3,9 +3,7 @@ import openai
 import json
 import os
 
-# Load OpenAI API key from Streamlit secrets
-st.secrets["openai_api_key"] = st.secrets["openai"]["api_key"]
-openai.api_key = st.secrets["openai_api_key"]
+openai.api_key = st.secrets["openai"]["api_key"]
 
 # Load categories from text file
 with open("categories.txt", "r") as f:
