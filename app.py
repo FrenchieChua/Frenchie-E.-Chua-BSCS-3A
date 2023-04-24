@@ -20,6 +20,7 @@ def generate_code(prompt):
 def main():
     st.set_page_config(page_title="C++ Tutorial App")
     st.title("C++ Tutorial App")
+    st.text("Coded by: Frenchie E. Chua BSCS 3A")
     task = st.selectbox("Select a programming task:", [
         "Hello World",
         "Sum of Two Numbers",
