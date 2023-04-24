@@ -1,56 +1,41 @@
 import streamlit as st
 import openai
-import requests
-from requests.structures import CaseInsensitiveDict
 
 # Set up the OpenAI API
 openai.api_key = st.secrets["api_key"]
 
-# Define a function to generate images from text
-def generate_image(prompt):
-    data = """
-    {
-        """
-    data += f'"model": "image-alpha-001",'
-    data += f'"prompt": "{prompt}",'
-    data += """
-        "num_images":1,
-        "size":"512x512",
-        "response_format":"url"
-    }
-    """
-    headers = CaseInsensitiveDict()
-    headers["Content-Type"] = "application/json"
-    headers["Authorization"] = f"Bearer {openai.api_key}"
-    resp = requests.post("https://api.openai.com/v1/images/generations", headers=headers, data=data)
+def generate_code(prompt):
+    model_engine = "text-davinci-002"  # OpenAI GPT-3 model to use
+    response = openai.Completion.create(
+        engine=model_engine,
+        prompt=prompt,
+        max_tokens=1024,
+        n=1,
+        stop=None,
+        temperature=0.5,
+    )
+    code = response.choices[0].text.strip()
+    return code
 
-    if resp.status_code != 200:
-        raise ValueError("Failed to generate image")
+def main():
+    st.set_page_config(page_title="C++ Tutorial App")
+    st.title("C++ Tutorial App")
+    task = st.selectbox("Select a programming task:", [
+        "Hello World",
+        "Sum of Two Numbers",
+        "Factorial",
+        "Fibonacci Sequence",
+    ])
+    if task == "Hello World":
+        prompt = "Write a C++ program that prints 'Hello, world!' to the console."
+    elif task == "Sum of Two Numbers":
+        prompt = "Write a C++ program that asks the user for two numbers and prints their sum."
+    elif task == "Factorial":
+        prompt = "Write a C++ program that asks the user for a number and prints its factorial."
+    else:  # task == "Fibonacci Sequence"
+        prompt = "Write a C++ program that asks the user for a number n and prints the first n numbers of the Fibonacci sequence."
+    code = generate_code(prompt)
+    st.code(code, language="cpp")
 
-    response_text = resp.text.replace('"', '')
-    return response_text
-
-# Define some sample prompts
-prompts = [
-    "A visualization of the solar system",
-    "A diagram of the human brain",
-    "A representation of the water cycle",
-    "An illustration of the process of photosynthesis",
-    "A map of the world with countries labeled"
-]
-
-# Define the Streamlit app
-st.title("Visual Tutor")
-
-# Display the sample prompts
-st.write("Choose a prompt or enter your own:")
-prompt = st.selectbox("Prompt", prompts, index=0)
-if prompt == "Enter your own":
-    prompt = st.text_input("Enter a prompt", "")
-
-# Generate and display the image
-if prompt:
-    st.write("Generating image...")
-    image_url = generate_image(prompt)
-    st.set_option('deprecation.showfileUploaderEncoding', False)
-    st.image(image_url)
+if __name__ == "__main__":
+    main()
