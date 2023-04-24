@@ -1,51 +1,55 @@
 import streamlit as st
 import openai
-import json
-import os
+import requests
+from requests.structures import CaseInsensitiveDict
 
-openai.api_key = st.secrets["openai"]["api_key"]
+# Set up the OpenAI API
+openai.api_key = st.secrets["api_key"]
 
-# Load categories from text file
-with open("categories.txt", "r") as f:
-    categories = [line.strip() for line in f.readlines()]
-    
-# Define function to classify an object using ChatGPT
-def classify_object(object_name):
-    # Prompt ChatGPT to classify the object
-    prompt = f"Please classify the object '{object_name}' into one of the following categories: {', '.join(categories)}."
-    response = openai.Completion.create(
-        engine="text-davinci-003", 
-        prompt=prompt,
-        max_tokens=1024,
-        n=1,
-        stop=None,
-        temperature=0.5,
-    )
+# Define a function to generate images from text
+def generate_image(prompt):
+    data = """
+    {
+        """
+    data += f'"model": "image-alpha-001",'
+    data += f'"prompt": "{prompt}",'
+    data += """
+        "num_images":1,
+        "size":"512x512",
+        "response_format":"url"
+    }
+    """
+    headers = CaseInsensitiveDict()
+    headers["Content-Type"] = "application/json"
+    headers["Authorization"] = f"Bearer {openai.api_key}"
+    resp = requests.post("https://api.openai.com/v1/images/generations", headers=headers, data=data)
 
-    # Extract the classification from the API response
-    classification = response.choices[0].text.strip()
+    if resp.status_code != 200:
+        raise ValueError("Failed to generate image")
 
-    # Return the classification
-    return classification
+    response_text = resp.text.replace('"', '')
+    return response_text
 
-# Define function to classify multiple objects
-def classify_objects(object_list):
-    # Classify each object and store the results in a dictionary
-    classifications = {}
-    for object_name in object_list:
-        classification = classify_object(object_name)
-        classifications[object_name] = classification
+# Define some sample prompts
+prompts = [
+    "A visualization of the solar system",
+    "A diagram of the human brain",
+    "A representation of the water cycle",
+    "An illustration of the process of photosynthesis",
+    "A map of the world with countries labeled"
+]
 
-    # Return the dictionary of classifications
-    return classifications
+# Define the Streamlit app
+st.title("Visual Tutor")
 
-# Load objects from text file
-with open("objects.txt", "r") as f:
-    objects = [line.strip() for line in f.readlines()]
-    
-# Classify the objects
-classifications = classify_objects(objects)
+# Display the sample prompts
+st.write("Choose a prompt or enter your own:")
+prompt = st.selectbox("Prompt", prompts, index=0)
+if prompt == "Enter your own":
+    prompt = st.text_input("Enter a prompt", "")
 
-# Print the results
-for object_name, classification in classifications.items():
-    st.write(f"The object '{object_name}' was classified as '{classification}'.")
+# Generate and display the image
+if prompt:
+    st.write("Generating image...")
+    image_url = generate_image(prompt)
+    st.image(image_url)
