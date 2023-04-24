@@ -52,4 +52,5 @@ if prompt == "Enter your own":
 if prompt:
     st.write("Generating image...")
     image_url = generate_image(prompt)
+    st.set_option('deprecation.showfileUploaderEncoding', False)
     st.image(image_url)
